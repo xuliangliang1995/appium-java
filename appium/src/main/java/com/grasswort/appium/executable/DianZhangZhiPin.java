@@ -47,33 +47,33 @@ public class DianZhangZhiPin implements Run {
         			if(!swipUpLimitToFindElement(5, address))
         				return;
         			String data_address = proxy.getText(address);
-            		logger.info("【工作地址】：{}", data_address);
-            		
-            		By contact = By.id("com.hpbr.directhires:id/tv_title_job");
-            		if(!swipUpLimitToFindElement(5, contact))
-            			return;
-            		String data_contact = proxy.getText(contact);
-            		logger.info("【联系人】:{}", data_contact);
-            		
-            		By company = By.id("com.hpbr.directhires:id/tv_shop_name");
-            		if(!swipUpLimitToFindElement(5, company))
-            			return;
-            		String data_company = proxy.getText(company);
-            		logger.info("【公司名称】:{}", data_company);
-            		
-            		By phone = By.id("com.hpbr.directhires:id/tv_tel");
-            		if(!swipUpLimitToFindElement(5, phone))
-            			return;
-            		String data_phone = proxy.getText(phone);
-            		logger.info("【联系电话】:{}",data_phone);
-            		
-            		//上传抓取信息
-            		sendDzzpDataToCrm(data_company, data_address, data_contact, data_phone);
-            		
-            		By back = By.id("com.hpbr.directhires:id/ic_back");
-            		proxy.clickTarget(back, j);
-        		}
-        	});
+				logger.info("【工作地址】：{}", data_address);
+
+				By contact = By.id("com.hpbr.directhires:id/tv_title_job");
+				if(!swipUpLimitToFindElement(5, contact))
+					return;
+				String data_contact = proxy.getText(contact);
+				logger.info("【联系人】:{}", data_contact);
+
+				By company = By.id("com.hpbr.directhires:id/tv_shop_name");
+				if(!swipUpLimitToFindElement(5, company))
+					return;
+				String data_company = proxy.getText(company);
+				logger.info("【公司名称】:{}", data_company);
+
+				By phone = By.id("com.hpbr.directhires:id/tv_tel");
+				if(!swipUpLimitToFindElement(5, phone))
+					return;
+				String data_phone = proxy.getText(phone);
+				logger.info("【联系电话】:{}",data_phone);
+
+				//上传抓取信息
+				sendDzzpDataToCrm(data_company, data_address, data_contact, data_phone);
+
+				By back = By.id("com.hpbr.directhires:id/ic_back");
+				proxy.clickTarget(back, j);
+				}
+			});
         	proxy.swipeToUp();
     	}
     	/*log.info("那么，结束咯！");
@@ -93,7 +93,7 @@ public class DianZhangZhiPin implements Run {
 		}
     	return true;
     }
-    //上传店长直聘数据到CRM
+    //上传数据
     private void sendDzzpDataToCrm(String companyName,String address,String contact,String contactPhone) {
     	if(StringUtils.isBlank(companyName)||StringUtils.isBlank(contactPhone))
     		return;
@@ -108,13 +108,13 @@ public class DianZhangZhiPin implements Run {
     			.post(body)
     			.build();
     	try {
-			Response response = client.newCall(request).execute();
-			logger.info("上传数据结果：{}",response.toString());
-			response.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Response response = client.newCall(request).execute();
+		logger.info("上传数据结果：{}",response.toString());
+		response.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     			
     }
 }
