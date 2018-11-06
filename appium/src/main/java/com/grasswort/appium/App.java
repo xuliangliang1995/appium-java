@@ -20,4 +20,11 @@ public class App
     {
         new App().run();
     }
+    /*
+	     1、Android SDK:http://tools.android-studio.org/index.php/sdk
+	    	【国内代理】Tools => Options => HttpProxyServer:mirrors.opencas.cn 80 => others[force ...]
+	     2、Appium:https://pan.baidu.com/s/1jGvAISu#list/path=%2F
+	     3、.net framework 4.5 百度下载
+	     4、Java环境
+      */
 }
