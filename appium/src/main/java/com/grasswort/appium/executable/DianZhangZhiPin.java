@@ -23,7 +23,7 @@ public class DianZhangZhiPin implements Run {
 	//驱动代理
 	private DriverProxy proxy = new DriverProxy(Apps.DZZP);
 	//数据上传
-	private final String URL_PREFIX = "http://123.207.163.197:4007";
+	private final String URL_PREFIX = "数据上传地址";
 	private static OkHttpClient client =new OkHttpClient.Builder()
 			.readTimeout(20,TimeUnit.SECONDS)//设置读取超时时间
             .writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
