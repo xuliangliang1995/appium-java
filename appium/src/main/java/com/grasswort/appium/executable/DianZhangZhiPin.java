@@ -68,7 +68,7 @@ public class DianZhangZhiPin implements Run {
 				logger.info("【联系电话】:{}",data_phone);
 
 				//上传抓取信息
-				sendDzzpDataToCrm(data_company, data_address, data_contact, data_phone);
+				sendDzzpData(data_company, data_address, data_contact, data_phone);
 
 				By back = By.id("com.hpbr.directhires:id/ic_back");
 				proxy.clickTarget(back, j);
@@ -94,7 +94,7 @@ public class DianZhangZhiPin implements Run {
     	return true;
     }
     //上传数据
-    private void sendDzzpDataToCrm(String companyName,String address,String contact,String contactPhone) {
+    private void sendDzzpData(String companyName,String address,String contact,String contactPhone) {
     	if(StringUtils.isBlank(companyName)||StringUtils.isBlank(contactPhone))
     		return;
     	FormBody body = new FormBody.Builder()
