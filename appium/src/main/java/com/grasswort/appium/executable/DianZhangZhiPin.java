@@ -26,9 +26,9 @@ public class DianZhangZhiPin implements Run {
 	private final String URL_PREFIX = "数据上传地址";
 	private static OkHttpClient client =new OkHttpClient.Builder()
 			.readTimeout(20,TimeUnit.SECONDS)//设置读取超时时间
-            .writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
-            .connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
-            .build();
+			.writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
+			.connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
+			.build();
 	
 	@Override
 	public void run() {
