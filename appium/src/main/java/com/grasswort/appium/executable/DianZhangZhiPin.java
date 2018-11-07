@@ -26,9 +26,9 @@ public class DianZhangZhiPin implements Run {
 	private final String UPLOAD_URL = "数据上传地址";
 	private static OkHttpClient client =new OkHttpClient.Builder()
 			.readTimeout(20,TimeUnit.SECONDS)//设置读取超时时间
-            .writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
-            .connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
-            .build();
+			.writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
+			.connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
+			.build();
 	
 	@Override
 	public void run() {
@@ -77,6 +77,7 @@ public class DianZhangZhiPin implements Run {
 					}
         		}
         	});
+
         	proxy.swipeToUp();
     	}
     	/*log.info("那么，结束咯！");
@@ -96,7 +97,7 @@ public class DianZhangZhiPin implements Run {
 		}
     	return true;
     }
-    //上传店长直聘数据到CRM
+    //上传数据
     private void sendDzzpData(String companyName,String address,String contact,String contactPhone) {
     	if(StringUtils.isBlank(companyName)||StringUtils.isBlank(contactPhone))
     		return;
@@ -111,13 +112,13 @@ public class DianZhangZhiPin implements Run {
     			.post(body)
     			.build();
     	try {
-			Response response = client.newCall(request).execute();
-			logger.info("上传数据结果：{}",response.toString());
-			response.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Response response = client.newCall(request).execute();
+		logger.info("上传数据结果：{}",response.toString());
+		response.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     			
     }
 }
