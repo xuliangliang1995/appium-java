@@ -237,7 +237,36 @@ public class DriverProxy {
     public void batchHandle(By by,Consumer<AndroidElement> consumer) {
     	findAll(by).stream().forEach(e -> consumer.accept(e));
     }
-    
+    /*点击等待target中的都可能出现，哪个出现返回哪个*/
+    public By clickWait(By click,By ... target) {
+    	Optional<AndroidElement> e = find(click);
+    	int i = 0;
+    	do {
+    		i++;
+    		if(e.isPresent()) {
+    			e.get().click();
+    			Optional<By> opt = Arrays.stream(target).filter(t -> exists(t)).findFirst();
+    			if(opt.isPresent()) {
+    				return opt.get();
+    			}
+    		}else {
+    			//ignore
+    		}
+    	}while(i<10);
+		return null;
+    }
+    public By clickWait(AndroidElement e,By ... target) {
+    	int i = 0;
+    	do {
+    		i++;
+    			e.click();
+    			Optional<By> opt = Arrays.stream(target).filter(t -> exists(t)).findFirst();
+    			if(opt.isPresent()) {
+    				return opt.get();
+    			}
+    	}while(i<10);
+		return null;
+    }
     /*【点击?个By直到出现目标 target,不出现则会继续尝试点击】*/
     public boolean clickTarget(By click,By target){
     	logger.info("点击【{}】==》【{}】",click.toString(),target.toString());

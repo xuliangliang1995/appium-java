@@ -46,6 +46,8 @@ public class DianZhangZhiPin implements Run {
 	//详情页返回按钮
 	final By BACK_BUTTON = By.id("com.hpbr.directhires:id/ic_back");
 	
+	final By TITLES_CLICK_ERROR = By.id("com.hpbr.directhires:id/tv_filter");
+	
 	@Override
 	public void run() {
 		logger.info("那么，开始咯！");
@@ -60,7 +62,10 @@ public class DianZhangZhiPin implements Run {
 	
 	//首页职位消费者
 	final Consumer<AndroidElement> TITLE_CONSUMER = e -> {
-		if(proxy.clickTarget(e, INNER_TITLE)) {
+		//点击元素e可能出现两种情况,返回出现的结果
+		final By CLICK_RESULT = proxy.clickWait(e, INNER_TITLE,TITLES_CLICK_ERROR);
+		
+		if(INNER_TITLE.equals(CLICK_RESULT)) {
 			try {
 				if(!swipUpLimitToFindElement(5, INNER_ADDRESS))
 					return;
@@ -88,6 +93,9 @@ public class DianZhangZhiPin implements Run {
 				//保证返回必须执行
         		proxy.clickTarget(BACK_BUTTON,TITLES);
 			}
+		}else if(TITLES_CLICK_ERROR.equals(CLICK_RESULT)){
+			//点击出错的一种情况。可能会误点出商圈搜索,再次点击收回搜索框。并跳过本次点击。
+			e.click();
 		}
 	};
 	//上滑一定次数去寻找元素
