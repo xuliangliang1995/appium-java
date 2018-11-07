@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -231,6 +233,11 @@ public class DriverProxy {
         forceWait(1);//强制等待1秒
     }
     /*****************************************高级操作【由于某些操作存在一定的失败几率,所以会进行一些逻辑上的判断,保证一定的成功率】************************************************/
+    /*批量消费*/
+    public void batchHandle(By by,Consumer<AndroidElement> consumer) {
+    	findAll(by).stream().forEach(e -> consumer.accept(e));
+    }
+    
     /*【点击?个By直到出现目标 target,不出现则会继续尝试点击】*/
     public boolean clickTarget(By click,By target){
     	logger.info("点击【{}】==》【{}】",click.toString(),target.toString());

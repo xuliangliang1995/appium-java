@@ -1,8 +1,8 @@
 package com.grasswort.appium.executable;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -29,62 +29,67 @@ public class DianZhangZhiPin implements Run {
 			.writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
 			.connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
 			.build();
+
+	
+	//首页职位名称
+	final By TITLES = By.id("com.hpbr.directhires:id/tv_job_name");
+	//详情页职位名称
+	final By INNER_TITLE = By.id("com.hpbr.directhires:id/tv_job");
+	//详情页职位地址
+	final By INNER_ADDRESS = By.id("com.hpbr.directhires:id/tv_location");
+	//详情页公司名称
+	final By INNER_COMPANY = By.id("com.hpbr.directhires:id/tv_shop_name");
+	//详情页联系人
+	final By INNER_CONTACT = By.id("com.hpbr.directhires:id/tv_title_job");
+	//详情页联系方式
+	final By INNER_PHONE = By.id("com.hpbr.directhires:id/tv_tel");
+	//详情页返回按钮
+	final By BACK_BUTTON = By.id("com.hpbr.directhires:id/ic_back");
 	
 	@Override
 	public void run() {
-
-    	logger.info("那么，开始咯！");
-    	proxy.forceWait(10);
-    	proxy.waitTargets(By.id("com.hpbr.directhires:id/tv_job_title"));//出现服务员tab
-    	By j = By.id("com.hpbr.directhires:id/tv_codedec");
-    	while(true){
-    		List<AndroidElement> jobs = proxy.findAll(j);
-    		if(jobs.isEmpty())
-    			continue;
-        	jobs.stream().forEach(job -> {
-        		if(proxy.clickTarget(job, By.id("com.hpbr.directhires:id/tv_job"))) {
-        			try {
-						By address = By.id("com.hpbr.directhires:id/tv_location");
-						if(!swipUpLimitToFindElement(5, address))
-							return;
-						String data_address = proxy.getText(address);
-						logger.info("【工作地址】：{}", data_address);
-						
-						By contact = By.id("com.hpbr.directhires:id/tv_title_job");
-						if(!swipUpLimitToFindElement(5, contact))
-							return;
-						String data_contact = proxy.getText(contact);
-						logger.info("【联系人】:{}", data_contact);
-						
-						By company = By.id("com.hpbr.directhires:id/tv_shop_name");
-						if(!swipUpLimitToFindElement(5, company))
-							return;
-						String data_company = proxy.getText(company);
-						logger.info("【公司名称】:{}", data_company);
-						
-						By phone = By.id("com.hpbr.directhires:id/tv_tel");
-						if(!swipUpLimitToFindElement(5, phone))
-							return;
-						String data_phone = proxy.getText(phone);
-						logger.info("【联系电话】:{}",data_phone);
-						
-						//上传抓取信息
-						sendDzzpData(data_company, data_address, data_contact, data_phone);
-					}finally {
-						//保证返回必须执行
-						By back = By.id("com.hpbr.directhires:id/ic_back");
-	            		proxy.clickTarget(back, j);
-					}
-        		}
-        	});
-
-        	proxy.swipeToUp();
-    	}
-    	/*log.info("那么，结束咯！");
-    	driver.quite();*/
-    
-
+		logger.info("那么，开始咯！");
+		proxy.forceWait(10);
+		proxy.waitTargets(TITLES);
+		while(true) {
+			proxy.batchHandle(TITLES, TITLE_CONSUMER);
+			proxy.swipeToUp();
+		}
+		
 	}
+	
+	//首页职位消费者
+	final Consumer<AndroidElement> TITLE_CONSUMER = e -> {
+		if(proxy.clickTarget(e, INNER_TITLE)) {
+			try {
+				if(!swipUpLimitToFindElement(5, INNER_ADDRESS))
+					return;
+				String data_address = proxy.getText(INNER_ADDRESS);
+				logger.info("【工作地址】：{}", data_address);
+				
+				if(!swipUpLimitToFindElement(5, INNER_CONTACT))
+					return;
+				String data_contact = proxy.getText(INNER_CONTACT);
+				logger.info("【联系人】:{}", data_contact);
+				
+				if(!swipUpLimitToFindElement(5, INNER_COMPANY))
+					return;
+				String data_company = proxy.getText(INNER_COMPANY);
+				logger.info("【公司名称】:{}", data_company);
+				
+				if(!swipUpLimitToFindElement(5, INNER_PHONE))
+					return;
+				String data_phone = proxy.getText(INNER_PHONE);
+				logger.info("【联系电话】:{}",data_phone);
+				
+				//上传抓取信息
+				sendDzzpData(data_company, data_address, data_contact, data_phone);
+			}finally {
+				//保证返回必须执行
+        		proxy.clickTarget(BACK_BUTTON,TITLES);
+			}
+		}
+	};
 	//上滑一定次数去寻找元素
     private boolean swipUpLimitToFindElement(int count , By by) {
     	int i = 0;
@@ -97,6 +102,7 @@ public class DianZhangZhiPin implements Run {
 		}
     	return true;
     }
+    
     //上传数据
     private void sendDzzpData(String companyName,String address,String contact,String contactPhone) {
     	if(StringUtils.isBlank(companyName)||StringUtils.isBlank(contactPhone))
@@ -112,13 +118,12 @@ public class DianZhangZhiPin implements Run {
     			.post(body)
     			.build();
     	try {
-		Response response = client.newCall(request).execute();
-		logger.info("上传数据结果：{}",response.toString());
-		response.close();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-    			
+			Response response = client.newCall(request).execute();
+			logger.info("上传数据结果：{}",response.toString());
+			response.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
