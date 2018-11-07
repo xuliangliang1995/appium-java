@@ -23,7 +23,7 @@ public class DianZhangZhiPin implements Run {
 	//驱动代理
 	private DriverProxy proxy = new DriverProxy(Apps.DZZP);
 	//数据上传
-	private final String URL_PREFIX = "数据上传地址";
+	private final String UPLOAD_URL = "数据上传地址";
 	private static OkHttpClient client =new OkHttpClient.Builder()
 			.readTimeout(20,TimeUnit.SECONDS)//设置读取超时时间
             .writeTimeout(10,TimeUnit.SECONDS)//设置写的超时时间
@@ -43,35 +43,38 @@ public class DianZhangZhiPin implements Run {
     			continue;
         	jobs.stream().forEach(job -> {
         		if(proxy.clickTarget(job, By.id("com.hpbr.directhires:id/tv_job"))) {
-        			By address = By.id("com.hpbr.directhires:id/tv_location");
-        			if(!swipUpLimitToFindElement(5, address))
-        				return;
-        			String data_address = proxy.getText(address);
-            		logger.info("【工作地址】：{}", data_address);
-            		
-            		By contact = By.id("com.hpbr.directhires:id/tv_title_job");
-            		if(!swipUpLimitToFindElement(5, contact))
-            			return;
-            		String data_contact = proxy.getText(contact);
-            		logger.info("【联系人】:{}", data_contact);
-            		
-            		By company = By.id("com.hpbr.directhires:id/tv_shop_name");
-            		if(!swipUpLimitToFindElement(5, company))
-            			return;
-            		String data_company = proxy.getText(company);
-            		logger.info("【公司名称】:{}", data_company);
-            		
-            		By phone = By.id("com.hpbr.directhires:id/tv_tel");
-            		if(!swipUpLimitToFindElement(5, phone))
-            			return;
-            		String data_phone = proxy.getText(phone);
-            		logger.info("【联系电话】:{}",data_phone);
-            		
-            		//上传抓取信息
-            		sendDzzpDataToCrm(data_company, data_address, data_contact, data_phone);
-            		
-            		By back = By.id("com.hpbr.directhires:id/ic_back");
-            		proxy.clickTarget(back, j);
+        			try {
+						By address = By.id("com.hpbr.directhires:id/tv_location");
+						if(!swipUpLimitToFindElement(5, address))
+							return;
+						String data_address = proxy.getText(address);
+						logger.info("【工作地址】：{}", data_address);
+						
+						By contact = By.id("com.hpbr.directhires:id/tv_title_job");
+						if(!swipUpLimitToFindElement(5, contact))
+							return;
+						String data_contact = proxy.getText(contact);
+						logger.info("【联系人】:{}", data_contact);
+						
+						By company = By.id("com.hpbr.directhires:id/tv_shop_name");
+						if(!swipUpLimitToFindElement(5, company))
+							return;
+						String data_company = proxy.getText(company);
+						logger.info("【公司名称】:{}", data_company);
+						
+						By phone = By.id("com.hpbr.directhires:id/tv_tel");
+						if(!swipUpLimitToFindElement(5, phone))
+							return;
+						String data_phone = proxy.getText(phone);
+						logger.info("【联系电话】:{}",data_phone);
+						
+						//上传抓取信息
+						sendDzzpData(data_company, data_address, data_contact, data_phone);
+					}finally {
+						//保证返回必须执行
+						By back = By.id("com.hpbr.directhires:id/ic_back");
+	            		proxy.clickTarget(back, j);
+					}
         		}
         	});
         	proxy.swipeToUp();
@@ -94,7 +97,7 @@ public class DianZhangZhiPin implements Run {
     	return true;
     }
     //上传店长直聘数据到CRM
-    private void sendDzzpDataToCrm(String companyName,String address,String contact,String contactPhone) {
+    private void sendDzzpData(String companyName,String address,String contact,String contactPhone) {
     	if(StringUtils.isBlank(companyName)||StringUtils.isBlank(contactPhone))
     		return;
     	FormBody body = new FormBody.Builder()
@@ -104,7 +107,7 @@ public class DianZhangZhiPin implements Run {
     			.add("contact_phone", contactPhone)
     			.build();
     	Request request = new Request.Builder()
-    			.url(String.format("%s/customerResource/dzzp/send", URL_PREFIX))
+    			.url(UPLOAD_URL)
     			.post(body)
     			.build();
     	try {
