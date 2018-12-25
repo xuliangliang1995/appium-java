@@ -20,6 +20,7 @@ import com.grasswort.appium.app.Apps;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.android.AndroidKeyCode;
 
 public class DriverProxy {
 	private static Logger logger = LoggerFactory.getLogger(DriverProxy.class);
@@ -62,7 +63,7 @@ public class DriverProxy {
         logger.info("{}版本:{}",platformName,platformVersion);
         try {
 		    log("初始化驱动！");
-		    this.driver = new AndroidDriver<AndroidElement>(new URL("http://127.0.0.1:4723/wd/hub"), caps);
+		    this.driver = new AndroidDriver<AndroidElement>(new URL(String.format("http://127.0.0.1:%d/wd/hub", app.getPort())), caps);
  			this.driver.manage().timeouts().implicitlyWait(DEFAULT_FIND_TIME, TimeUnit.SECONDS); 
  			int X=this.driver.manage().window().getSize().getWidth();
  			int Y=this.driver.manage().window().getSize().getHeight();
@@ -70,6 +71,14 @@ public class DriverProxy {
  		} catch (MalformedURLException e1) {
  			log("驱动初始化失败");
  		}
+	}
+	/*退出*/
+	public void quit() {
+		driver.quit();
+	}
+	/*点击返回*/
+	public void back() {
+		driver.pressKeyCode(AndroidKeyCode.BACK);
 	}
 	/* 返回内置driver对象*/
 	public Optional<AndroidDriver<AndroidElement>> getInnnerDriver() {
@@ -133,7 +142,7 @@ public class DriverProxy {
     	logger.info("click 【{}】",by.toString());
     	while(force){
     		try {
-				driver.findElement(by).click();
+				click(driver.findElement(by));
 				break;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -143,18 +152,13 @@ public class DriverProxy {
     public void click(AndroidElement e,boolean force){
     	logger.info("click 【{}】",e.toString());
     	while(force){
-    		try {
-				e.click();
-				break;
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}		
+    		click(e);	
     	}
     }
     public boolean clickTextFromBy(By by,String text){
     	for (AndroidElement travel : findAll(by)) {
 			if(text.equals(travel.getText())){
-				travel.click();
+				click(travel);
 				return true;
 			}
 		}
@@ -244,7 +248,7 @@ public class DriverProxy {
     	do {
     		i++;
     		if(e.isPresent()) {
-    			e.get().click();
+    			click(e.get());
     			Optional<By> opt = Arrays.stream(target).filter(t -> exists(t)).findFirst();
     			if(opt.isPresent()) {
     				return opt.get();
@@ -259,7 +263,7 @@ public class DriverProxy {
     	int i = 0;
     	do {
     		i++;
-    			e.click();
+    			click(e);
     			Optional<By> opt = Arrays.stream(target).filter(t -> exists(t)).findFirst();
     			if(opt.isPresent()) {
     				return opt.get();
@@ -276,7 +280,7 @@ public class DriverProxy {
 			if(i == 10) return false;
 			Optional<AndroidElement> e = find(click);
     		if(e.isPresent()) {
-    			e.get().click();
+    			click(e.get());
     		}else {
     			//ignore
     		}
@@ -291,7 +295,7 @@ public class DriverProxy {
 			if(i == 10) return false;
 			Optional<AndroidElement> e = find(click);
     		if(e.isPresent()) {
-    			e.get().click();
+    			click(e.get());
     		}else {
     			//ignore
     		}		 		
@@ -304,11 +308,7 @@ public class DriverProxy {
     	do{
     		i++;
 			if(i == 10) return false;
-			try {
-				click.click();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				click(click);
     	}while(!exists(target));
     	return true;
     }
@@ -382,5 +382,13 @@ public class DriverProxy {
     /*默认log*/
 	private final void log(String info) {
 		logger.info(DEFAULT_LOG_TEMPLATE,info);
+	}
+	
+	private void click(AndroidElement e) {
+		try {
+			e.click();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.grasswort.appium;
 
-import com.grasswort.appium.executable.DianZhangZhiPin;
+import com.grasswort.appium.executable.MMS;
 import com.grasswort.appium.executable.Run;
 
 /**
@@ -10,7 +10,7 @@ import com.grasswort.appium.executable.Run;
 public class App 
 {
 	//选择要运行的应用
-	private Run run = new DianZhangZhiPin();
+	private Run run = new MMS();
 	
 	public void run() {
 		if(run!=null)
@@ -26,5 +26,6 @@ public class App
 	     2、Appium:https://pan.baidu.com/s/1jGvAISu#list/path=%2F
 	     3、.net framework 4.5 百度下载
 	     4、Java环境
+	     5、adb logcat>D:/log.txt
       */
 }

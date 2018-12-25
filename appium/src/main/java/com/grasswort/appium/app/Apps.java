@@ -1,17 +1,20 @@
 package com.grasswort.appium.app;
 
 public enum Apps {
-	DZZP("7TN7HASCQC7HV865","Android","4.4.2","com.hpbr.directhires","com.hpbr.directhires.module.WelAct");
+	DZZP(4723, "7TN7HASCQC7HV865", "Android", "4.4.2","com.hpbr.directhires","com.hpbr.directhires.module.WelAct"),
+	MMS(4725, "6HCUUCNZ99999999", "Android", "5.1", "com.android.mms", ".ui.ConversationList");
 	/**
 	  * 查看连接设备：adb devices
 	  *查看apk报名以及入口Activity名称：aapt dump badging 'D:\apk\com.hpbr.directhires_401040.apk'
+	  *查看未知apk: adb logcat>D:/log.txt 然后通过搜索 displayed
 	 * @param udid 设备的udid (adb devices)
 	 * @param platformName 安卓自动化还是IOS自动化
 	 * @param platformVersion 操作系统版本
 	 * @param appPackage 被测app的包名
 	 * @param appActivity 被测app的入口Activity名称
 	 */
-	private Apps(String udid, String platformName, String platformVersion, String appPackage, String appActivity) {
+	private Apps(int port, String udid, String platformName, String platformVersion, String appPackage, String appActivity) {
+		this.port = port;
 		this.udid = udid;
 		this.platformName = platformName;
 		this.platformVersion = platformVersion;
@@ -23,6 +26,7 @@ public enum Apps {
 	private String platformVersion;
 	private String appPackage;
 	private String appActivity;
+	private int port;
 	public String getUdid() {
 		return udid;
 	}
@@ -53,6 +57,19 @@ public enum Apps {
 	public void setAppActivity(String appActivity) {
 		this.appActivity = appActivity;
 	}
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
+	/**
+	 * @param port the port to set
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
 	//【店长直聘示例相关信息】
 		/*package: name='com.hpbr.directhires' versionCode='401040' versionName='4.14' platformBuildVersionName='7.1.1'
 		sdkVersion:'15'
