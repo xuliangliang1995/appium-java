@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
@@ -41,9 +42,9 @@ public class MMS implements Run {
 			.connectTimeout(10,TimeUnit.SECONDS)//设置连接超时时间
 			.build();
 	
-	private final String SMS_GET_URL = "http://123.207.163.197:4007/admin/sms/getOne";
+	private final String SMS_GET_URL = "http://qiye.jianzhibao.com:4007/admin/sms/getOne";
 	
-	private final String SMS_POST_AFTER_SENT_TEMPLATE = "http://123.207.163.197:4007/admin/sms/%d/sent";
+	private final String SMS_POST_AFTER_SENT_TEMPLATE = "http://qiye.jianzhibao.com:4007/admin/sms/%d/sent";
 	
 	final By CREATE_SMS = By.id("com.android.mms:id/action_new");
 	
@@ -53,7 +54,7 @@ public class MMS implements Run {
 	
 	final By SEND_BTN = By.id("com.android.mms:id/send_button");
 	
-	final By BACK = By.id("com.android.mms:id/oppo_back_bt");
+	final By BACK = By.id("android:id/up");
 	
 	final By CANCEL = By.id("android:id/button2");
 	
@@ -76,11 +77,11 @@ public class MMS implements Run {
 					proxy.setValue(CONTENT_INPUT, sms.get().getContent());
 					proxy.click(SEND_BTN, true);
 					//proxy.back();
-					proxy.clickIfExist(CANCEL);
 					proxy.clickTarget(BACK, CREATE_SMS);
 					markSent(sms.get());
 				} 
 			} else {
+				proxy.swipeToUp();
 				logger.info("暂无可发送短信！");
 				proxy.forceWait(3);
 			}
@@ -91,6 +92,7 @@ public class MMS implements Run {
 	 *@author xuliangliang 
 	 *@return
 	 */
+	private static AtomicLong key = new AtomicLong();
 	private Optional<SMS> getSMS() {
 		Request request = new Request.Builder()
     			.url(SMS_GET_URL)
@@ -106,13 +108,15 @@ public class MMS implements Run {
 					sms.id = smsObj.getIntValue("id");
 					sms.phone = smsObj.getString("sendToPhone");
 					sms.content = smsObj.getString("content");
+					response.close();
 					return Optional.of(sms);
 				}
 			}
+			response.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return Optional.empty();
-		}
+		} 
 		return Optional.empty();
 	}
 	
@@ -127,7 +131,8 @@ public class MMS implements Run {
     			.post(new FormBody.Builder().build())
     			.build();
 		try {
-			client.newCall(request).execute();
+			Response response = client.newCall(request).execute();
+			response.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
