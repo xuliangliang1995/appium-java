@@ -47,7 +47,7 @@ public class DriverProxy {
 			   appActivity = app.getAppActivity();
 		//初始化驱动
 		DesiredCapabilities caps=new DesiredCapabilities();
-    	caps.setCapability("automationName", "Appium");
+    	caps.setCapability("automationName", "uiautomator2");
 		caps.setCapability("deviceName", udid);//设备名称
 		caps.setCapability("platformName", platformName); //安卓自动化还是IOS自动化
 		caps.setCapability("platformVersion", platformVersion); //安卓操作系统版本
@@ -58,8 +58,8 @@ public class DriverProxy {
 		caps.setCapability("simpleIsVisibleCheck", false);
         caps.setCapability("autoGrantPermissions", true);
         caps.setCapability("clearSystemFiles", true);
-        caps.setCapability("unicodeKeyboard" ,"True");
-        caps.setCapability("resetKeyboard", "True");
+        caps.setCapability("unicodeKeyboard" ,"false");
+        caps.setCapability("resetKeyboard", "false");
         logger.info("{}版本:{}",platformName,platformVersion);
         try {
 		    log("初始化驱动！");
@@ -87,7 +87,10 @@ public class DriverProxy {
 	
 	/*判断?个元素是否存在*/
 	public boolean exists(By by) {
-		return driver.findElements(by).size()>0;
+		logger.info("find {}", by.toString());
+		boolean exists =  driver.findElements(by).size()>0;
+		logger.info("find result: {}", exists ? "exists" : "not exists");
+		return exists;
 	}
 	public boolean exist(By by,String text){
 		logger.info("find 【{}】 from 【{}】" ,text,by.toString());

@@ -1,7 +1,7 @@
 package com.grasswort.appium;
 
-import com.grasswort.appium.executable.MMS;
 import com.grasswort.appium.executable.Run;
+import com.grasswort.appium.executable.Wechat;
 
 /**
  * Hello world!
@@ -10,7 +10,7 @@ import com.grasswort.appium.executable.Run;
 public class App 
 {
 	//选择要运行的应用
-	private Run run = new MMS();
+	private Run run = new Wechat();
 	
 	public void run() {
 		if(run!=null)

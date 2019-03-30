@@ -2,7 +2,8 @@ package com.grasswort.appium.app;
 
 public enum Apps {
 	DZZP(4723, "7TN7HASCQC7HV865", "Android", "4.4.2","com.hpbr.directhires","com.hpbr.directhires.module.WelAct"),
-	MMS(4725, "6HCUUCNZ99999999", "Android", "5.1", "com.android.mms", ".ui.ConversationList");
+	MMS(4725, "6HCUUCNZ99999999", "Android", "5.1", "com.android.mms", ".ui.ConversationList"),
+	WECHAT(4723, "32b5905f", "Android", "7.1.2", "com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
 	/**
 	  * 查看连接设备：adb devices
 	  *查看apk报名以及入口Activity名称：aapt dump badging 'D:\apk\com.hpbr.directhires_401040.apk'
