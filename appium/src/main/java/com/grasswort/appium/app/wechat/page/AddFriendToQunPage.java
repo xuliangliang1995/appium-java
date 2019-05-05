@@ -31,6 +31,7 @@ public class AddFriendToQunPage implements Page {
     private final By NAME_BOX = By.id("com.tencent.mm:id/q0");
     private final By SELECT_BOX = By.id("com.tencent.mm:id/a08");
     private final By CONFIRM_BOX = By.id("com.tencent.mm:id/jx");
+    private final By BACK = By.id("com.tencent.mm:id/kb");
     @Override
     public boolean isCurrentPage() {
         boolean bo = driver.exists(USER_BOX);
@@ -60,12 +61,9 @@ public class AddFriendToQunPage implements Page {
      * @return
      */
     private Page backToFirstPage() {
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
+        while (driver.exists(BACK)) {
+            driver.click(BACK, false);
+        }
         FirstPage page2 = new FirstPage(driver);
         page2.setGoal(goal);
         return page2.isCurrentPage() ? page2 : this;
@@ -98,10 +96,7 @@ public class AddFriendToQunPage implements Page {
                         logger.info("获取微信昵称：{}", name);
                         lastUserName = name;
                         boolean needAdd = ! selectSet.contains(name)
-                                && (
-                                Objects.equals(name, "C")
-                                        || Objects.equals(name, "抠脚的前端程序员")
-                        );
+                                && name.indexOf("@") >= 0;
                         if (needAdd) {
                             selectSet.add(name);
                             MobileElement fireBtn = e.findElement(SELECT_BOX);

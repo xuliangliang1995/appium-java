@@ -6,6 +6,7 @@ import com.grasswort.appium.app.wechat.GoalStep;
 import com.grasswort.appium.app.wechat.goal.GoalAddFriend;
 import com.grasswort.appium.app.wechat.goal.GoalPullFriendToQun;
 import com.grasswort.appium.driver.DriverProxy;
+import io.appium.java_client.android.AndroidElement;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ public class UserInfoPage implements Page {
     private final By PORTRAIT = By.id("com.tencent.mm:id/b3w");
     private final By ADD_BTN = By.id("com.tencent.mm:id/cs");
     private final By SEND_BTN = By.id("com.tencent.mm:id/jx");
+    private final By BACK = By.id("com.tencent.mm:id/kb");
 
     public UserInfoPage(DriverProxy driver) {
         this.driver = driver;
@@ -55,11 +57,19 @@ public class UserInfoPage implements Page {
         if (notAdded) {
             driver.getInnnerDriver().get().tap(1, 520, 1000, 300);
             driver.forceWait(5);
+            AndroidElement addBtn = driver.find(ADD_BTN).get();
+            //driver.getInnnerDriver().get().tap(1, 520, 1200, 300);
+            driver.getInnnerDriver().get().tap(1, addBtn.getCenter().x, addBtn.getCenter().y, 300);
+            driver.forceWait(5);
             boolean addSuccess = driver.getInnnerDriver().get().getPageSource().indexOf("发消息") >= 0;
             if (addSuccess) {
 
             } else {
-                driver.getInnnerDriver().get().tap(1, 950, 138, 300);
+                final By userNote = By.id("com.tencent.mm:id/e0s");
+                driver.setValue(userNote, "@" + ((GoalAddFriend)goal).getPhone());
+                AndroidElement sendBtn = driver.find(SEND_BTN).get();
+                //driver.getInnnerDriver().get().tap(1, 950, 138, 300);
+                driver.getInnnerDriver().get().tap(1, sendBtn.getCenter().x, sendBtn.getCenter().y, 300);
                 driver.forceWait(5);
             }
         }
@@ -68,7 +78,7 @@ public class UserInfoPage implements Page {
         driver.forceWait(1);
         driver.getInnnerDriver().get().tap(1, 70, 140, 300);
         driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 330, 330, 300);
+        driver.getInnnerDriver().get().tap(1, 330, 230, 300);
         SearchFriendPage page2 = new SearchFriendPage(driver);
         page2.setGoal(goal);
         return page2.isCurrentPage() ? page2 : this;
@@ -79,14 +89,9 @@ public class UserInfoPage implements Page {
      * @return
      */
     private Page backToFirstPage() {
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
+        while (driver.exists(BACK)) {
+            driver.click(BACK, false);
+        }
         FirstPage page2 = new FirstPage(driver);
         page2.setGoal(goal);
         return page2.isCurrentPage() ? page2 : this;

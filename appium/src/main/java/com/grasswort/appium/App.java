@@ -1,7 +1,7 @@
 package com.grasswort.appium;
 
+import com.grasswort.appium.executable.DZDP;
 import com.grasswort.appium.executable.Run;
-import com.grasswort.appium.executable.Wechat;
 
 /**
  * Hello world!
@@ -10,11 +10,12 @@ import com.grasswort.appium.executable.Wechat;
 public class App 
 {
 	//选择要运行的应用
-	private Run run = new Wechat();
+	private Run run = new DZDP();
 	
 	public void run() {
-		if(run!=null)
+		if (run != null) {
 			run.run();
+		}
 	}
     public static void main( String[] args )
     {

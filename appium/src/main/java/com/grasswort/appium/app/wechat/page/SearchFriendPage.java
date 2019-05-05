@@ -6,6 +6,7 @@ import com.grasswort.appium.app.wechat.GoalStep;
 import com.grasswort.appium.app.wechat.goal.GoalAddFriend;
 import com.grasswort.appium.app.wechat.goal.GoalPullFriendToQun;
 import com.grasswort.appium.driver.DriverProxy;
+import io.appium.java_client.android.AndroidElement;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class SearchFriendPage implements Page {
 
     private final By SEARCH_FRIEND_PAGE_MARKER = By.id("com.tencent.mm:id/kh");
     private final By FIND_USER_BTN = By.id("com.tencent.mm:id/r4");
+    private final By BACK = By.id("com.tencent.mm:id/kb");
+    private final By BACK2 = By.id("com.tencent.mm:id/kf");
+    private final By SEARCH_BOOT_BTN = By.id("com.tencent.mm:id/d85");
 
     @Override
     public boolean isCurrentPage() {
@@ -61,9 +65,12 @@ public class SearchFriendPage implements Page {
             return page2;
         }
         goal.setStep(GoalStep.ACHIEVE);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
+        AndroidElement backBtn = driver.find(BACK2).get();
+        driver.getInnnerDriver().get().tap(1, backBtn.getCenter().x, backBtn.getCenter().y, 300);
         driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 330, 330, 300);
+
+        AndroidElement bootBtn = driver.find(SEARCH_BOOT_BTN).get();
+        driver.getInnnerDriver().get().tap(1, bootBtn.getCenter().x, bootBtn.getCenter().y, 300);
         driver.forceWait(1);
         return this;
     }
@@ -73,12 +80,9 @@ public class SearchFriendPage implements Page {
      * @return
      */
     private Page backToFirstPage() {
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 140, 300);
-        driver.forceWait(1);
+        while (driver.exists(BACK)) {
+            driver.click(BACK, false);
+        }
         FirstPage page2 = new FirstPage(driver);
         page2.setGoal(goal);
         return page2.isCurrentPage() ? page2 : this;

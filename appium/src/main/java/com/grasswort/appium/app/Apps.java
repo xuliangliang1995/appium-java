@@ -3,18 +3,23 @@ package com.grasswort.appium.app;
 public enum Apps {
 	DZZP(4723, "7TN7HASCQC7HV865", "Android", "4.4.2","com.hpbr.directhires","com.hpbr.directhires.module.WelAct"),
 	MMS(4725, "6HCUUCNZ99999999", "Android", "5.1", "com.android.mms", ".ui.ConversationList"),
-	WECHAT(4723, "32b5905f", "Android", "7.1.2", "com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
+	//WECHAT(4723, "32b5905f", "Android", "7.1.2", "com.tencent.mm", "com.tencent.mm.ui.LauncherUI"),
+	WECHAT_NOX(4723, "127.0.0.1:62001", "Android", "5.1.1", "com.tencent.mm", "com.tencent.mm.ui.LauncherUI"),
+	TMALL(4723, "7TN7HASCQC7HV865", "Android", "4.4.2", "com.alibaba.ailabs.tg", "com.alibaba.ailabs.tg.splash.WelcomeActivity"),
+	DZDP(4726, "127.0.0.1:62001", "Android", "5.1.1", "com.dianping.v1", "com.dianping.main.guide.SplashScreenActivity");
 	/**
-	  * 查看连接设备：adb devices
-	  *查看apk报名以及入口Activity名称：aapt dump badging 'D:\apk\com.hpbr.directhires_401040.apk'
-	  *查看未知apk: adb logcat>D:/log.txt 然后通过搜索 displayed
+	 * 查看连接设备：adb devices
+	 * 查看apk报名以及入口Activity名称：aapt dump badging 'D:\apk\com.hpbr.directhires_401040.apk'
+	 * adb connect 127.0.0.1:62001
+	 * aapt dump badging 'F:\apk\tmall.apk'
+	 * 查看未知apk: adb logcat>D:/log.txt 然后通过搜索 displayed
 	 * @param udid 设备的udid (adb devices)
 	 * @param platformName 安卓自动化还是IOS自动化
 	 * @param platformVersion 操作系统版本
 	 * @param appPackage 被测app的包名
 	 * @param appActivity 被测app的入口Activity名称
 	 */
-	private Apps(int port, String udid, String platformName, String platformVersion, String appPackage, String appActivity) {
+	Apps(int port, String udid, String platformName, String platformVersion, String appPackage, String appActivity) {
 		this.port = port;
 		this.udid = udid;
 		this.platformName = platformName;

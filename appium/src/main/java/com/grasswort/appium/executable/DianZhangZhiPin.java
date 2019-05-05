@@ -138,7 +138,6 @@ public class DianZhangZhiPin implements Run {
 			logger.info("上传数据结果：{}",response.toString());
 			response.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

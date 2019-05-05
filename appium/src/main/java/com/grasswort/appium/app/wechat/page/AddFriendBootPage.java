@@ -18,6 +18,7 @@ public class AddFriendBootPage implements Page {
     private Goal goal;
 
     private final By ADD_FRIEND_BOOT_BOX = By.id("com.tencent.mm:id/d85");
+    private final By BACK = By.id("com.tencent.mm:id/kb");
 
     public AddFriendBootPage(DriverProxy driver) {
         this.driver = driver;
@@ -58,8 +59,9 @@ public class AddFriendBootPage implements Page {
      * @return
      */
     private Page backToFirstPage() {
-        driver.getInnnerDriver().get().tap(1, 70, 150, 300);
-        driver.forceWait(1);
+        while (driver.exists(BACK)) {
+            driver.click(BACK, false);
+        }
         FirstPage page2 = new FirstPage(driver);
         page2.setGoal(goal);
         return page2.isCurrentPage() ? page2 : this;

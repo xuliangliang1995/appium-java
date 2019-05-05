@@ -79,6 +79,7 @@ public class DriverProxy {
 	/*点击返回*/
 	public void back() {
 		driver.pressKeyCode(AndroidKeyCode.BACK);
+		this.forceWait(2);
 	}
 	/* 返回内置driver对象*/
 	public Optional<AndroidDriver<AndroidElement>> getInnnerDriver() {

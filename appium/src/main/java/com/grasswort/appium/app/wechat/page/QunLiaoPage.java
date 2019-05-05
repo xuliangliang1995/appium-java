@@ -17,6 +17,7 @@ public class QunLiaoPage implements Page {
 
     private final By HANDLE = By.id("com.tencent.mm:id/jy");
     private final By ADD_BTN = By.name("添加成员");
+    private final By BACK = By.id("com.tencent.mm:id/kb");
 
     public QunLiaoPage(DriverProxy driver) {
         this.driver = driver;
@@ -52,10 +53,9 @@ public class QunLiaoPage implements Page {
      */
     private Page addFriend() {
         // 多点几下返回不会出错，为了防止手机卡，多点几下保障回到首页
-        driver.getInnnerDriver().get().tap(1, 70, 150, 300);
-        driver.forceWait(1);
-        driver.getInnnerDriver().get().tap(1, 70, 150, 300);
-        driver.forceWait(1);
+        while (driver.exists(BACK)) {
+            driver.click(BACK, false);
+        }
         FirstPage page2 = new FirstPage(driver);
         page2.setGoal(goal);
         return page2.isCurrentPage() ? page2 : this;
